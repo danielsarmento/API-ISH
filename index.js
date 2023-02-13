@@ -1,40 +1,43 @@
 const fs = require('fs')
-const Excel = require('exceljs');
-const array = []
+const axios = require('axios')
+const Excel = require('exceljs')
+const array = [];
 require('dotenv').config()
 
 async function fetchData(page) {
-    const url = "itau.com.br"
+    const url = "ish.com.br"
+    if(page === 1){
+      console.log(`Iniciando processo...`)
+    }
+    console.log(`Página: ${page}`)
 
     try {
-      const response = await fetch('https://checkleakedcc-official.p.rapidapi.com/dehashed', {
-        method: 'POST',
+      const response = await axios.post('https://checkleakedcc-official.p.rapidapi.com/dehashed', {
+        entry: url,
+        type: 'email',
+        page: page
+      }, {
         headers: {
           'Content-Type': 'application/json',
           'api-key': process.env.API_KEY,
           'X-RapidAPI-Key': process.env.RAPIAPI,
           'X-RapidAPI-Host': 'checkleakedcc-official.p.rapidapi.com'
-        },
-        body: `{"entry":"${url}","type":"email","page":${page}}`
+        }
       });
-
-    const data = await response.json();
-
-    data.entries.map((obj)=>{
-      array.push(obj.entry)
-    })
-    return
-
+      const data = response.data;
+      data.entries.map((objeto) => {
+        array.push(objeto.entry);
+      });
     } catch (error) {
       console.error(error);
     }
 }
   
 let count = 1;
-const intervalId = setInterval(() => {
+const main = setInterval(() => {
     fetchData(count)
         .then(() => {
-            if (count === 5) {
+            if (count === 10) {
                 let workbook = new Excel.Workbook();
                 let worksheet = workbook.addWorksheet('Sheet1');
 
@@ -65,17 +68,18 @@ const intervalId = setInterval(() => {
                     item.source && item.source.Sources ? item.source.Sources : "N/A"]);
                 });
                 
-                clearInterval(intervalId);
-
+                
                 workbook.xlsx.writeFile("dados.xlsx").then(function() {
-                console.log("Arquivo salvo com sucesso.");
+                  console.log("Arquivo salvo com sucesso.");
                 });
-
+                console.log(`Foram obtidos ${array.length} arquivos`)
+                clearInterval(main);
+                return
             } else {
-                count++;
+                count++
             }
         });
-}, 1000);
+}, 2000);
 
   
   
