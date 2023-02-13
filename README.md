@@ -11,4 +11,5 @@ Esse projeto refere-se a uma automação de busca de dados. Esta sendo desenvolv
 ## Variáveis Sensíveis
 
 *API_KEY -> Key de autorização da API
+
 *RAPIAPI -> Key de autorização da API
