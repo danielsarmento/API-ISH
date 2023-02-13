@@ -7,7 +7,7 @@ require('dotenv').config()
 async function fetchData(page) {
     const url = "ish.com.br"
     if(page === 1){
-      console.log(`Iniciando processo...`)
+      console.log(`Iniciando processo`)
     }
     console.log(`Página: ${page}`)
 
@@ -34,10 +34,11 @@ async function fetchData(page) {
 }
   
 let count = 1;
+
 const main = setInterval(() => {
     fetchData(count)
         .then(() => {
-            if (count === 10) {
+            if (count === 15) {
                 let workbook = new Excel.Workbook();
                 let worksheet = workbook.addWorksheet('Sheet1');
 
@@ -74,12 +75,13 @@ const main = setInterval(() => {
                 });
                 console.log(`Foram obtidos ${array.length} arquivos`)
                 clearInterval(main);
+                //count = 1
                 return
             } else {
                 count++
             }
         });
-}, 2000);
+}, 5000);
 
   
   
