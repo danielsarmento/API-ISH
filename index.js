@@ -19,7 +19,11 @@ function getFlagsValue (flag){
 SearchPages(url, 1)
   .then((response) => {
     results = response.results;
-    pages = response.pages
+    if(response.pages < 500){
+      pages = response.pages
+    } else {
+      pages = 500
+    }
   })
   .catch((error) => {
     console.error(error);
@@ -154,4 +158,4 @@ const main = setInterval(() => {
       count++;
     }
   });
-}, 5000);
+}, 6000);
