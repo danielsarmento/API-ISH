@@ -5,11 +5,16 @@ const { SearchPages } = require("./functionPages");
 require("dotenv").config();
 
 const array = [];
-const url = `${process.argv[2]}`
+const url = `${getFlagsValue('--url')}`
 
 //"ish.com.br";
 let results;
 let pages;
+
+function getFlagsValue (flag){
+  const index = process.argv.indexOf(flag) +1
+  return process.argv[index]
+}
 
 SearchPages(url, 1)
   .then((response) => {
@@ -34,7 +39,7 @@ function getFormattedDateAndTime() {
   
 async function fetchData(page) {
   if (page === 1) {
-    console.log(`Iniciando processo`);
+    console.log(`Iniciando processo para o site: ${url} | Aguarde...`);
   }
   if(page == pages){
     console.log(`Página: ${page}/${pages} -> ${results}/${results}`);
@@ -138,8 +143,8 @@ const main = setInterval(() => {
         ]);
       });
 
-      workbook.xlsx.writeFile(`dados_(${url})_${getFormattedDateAndTime()}.xlsx`).then(function () {
-        console.log("Arquivo salvo com sucesso.");
+      workbook.xlsx.writeFile(`./DadosPlanilhas/dados_(${url})_${getFormattedDateAndTime()}.xlsx`).then(function () {
+        console.log("Arquivo salvo com sucesso! Verifique a pasta 'DadosPlanilhas'.");
       });
       console.log(`Foram obtidos ${array.length} arquivos`);
       clearInterval(main);
