@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const array = [];
 const url = `${getFlagsValue('--url')}`
-
+const generatedNumbers = new Set();
 //"ish.com.br";
 let results;
 let pages;
@@ -40,7 +40,7 @@ function getFormattedDateAndTime() {
   
     return `${day}.${month}.${year}_${hours}h${minutes}m${seconds}s`;
 }
-  
+
 async function fetchData(page) {
   if (page === 1) {
     console.log(`Iniciando processo para o site: ${url} | Aguarde...`);
@@ -72,90 +72,168 @@ async function fetchData(page) {
     data.entries.map((objeto) => {
       array.push(objeto.entry);
     });
+    return;
   } catch (error) {
-    console.error(error);
+    console.logr(`Página ${page} não capturada!`);
   }
 }
+
+
 
 let count = 1;
 
 const main = setInterval(() => {
-  fetchData(count).then(() => {
-    if (count === pages) {
-      let workbook = new Excel.Workbook();
-      let worksheet = workbook.addWorksheet("Sheet1");
-
-      worksheet.addRow([
-        "Id",
-        "Email",
-        "Username",
-        "Password",
-        "Hashed Password",
-        "Name",
-        "Vin",
-        "Address",
-        "Ip Address",
-        "Phone",
-        "Obtained From",
-        " Source Name",
-        "Source Linked Unknow",
-        "Source Linked Dehased",
-        "Source Linked LeakCheck",
-        "Source Linked HbwPwned",
-        "Source Domain",
-        "Source DataClasses",
-        "Source BreachDate",
-        "Source Extra",
-        "Source Sources",
-      ]);
-
-      array.forEach(function (item) {
+  if (!generatedNumbers.has(count)) {
+    generatedNumbers.add(count);
+    fetchData(count).then(() => {
+      if (count === pages) {
+        let workbook = new Excel.Workbook();
+        let worksheet = workbook.addWorksheet("Sheet1");
+  
         worksheet.addRow([
-          item.id,
-          item.email,
-          item.username,
-          item.password,
-          item.hashed_password,
-          item.name,
-          item.vin,
-          item.address,
-          item.ip_address,
-          item.phone,
-          item.obtained_from,
-          item.source && item.source.Name ? item.source.Name : "N/A",
-          item.source && item.source.Linked
-            ? item.source.Linked.unknown
-            : "N/A",
-          item.source && item.source.Linked
-            ? item.source.Linked.dehashed
-            : "N/A",
-          item.source && item.source.Linked
-            ? item.source.Linked.leakCheck
-            : "N/A",
-          item.source && item.source.Linked
-            ? item.source.Linked.hbwPwned
-            : "N/A",
-          item.source && item.source.Domain ? item.source.Domain : "N/A",
-          item.source && item.source.DataClasses
-            ? item.source.DataClasses
-            : "N/A",
-          item.source && item.source.BreachDate
-            ? item.source.BreachDate
-            : "N/A",
-          item.source && item.source.extra ? item.source.extra : "N/A",
-          item.source && item.source.Sources ? item.source.Sources : "N/A",
+          "Id",
+          "Email",
+          "Username",
+          "Password",
+          "Hashed Password",
+          "Name",
+          "Vin",
+          "Address",
+          "Ip Address",
+          "Phone",
+          "Obtained From",
+          " Source Name",
+          "Source Linked Unknow",
+          "Source Linked Dehased",
+          "Source Linked LeakCheck",
+          "Source Linked HbwPwned",
+          "Source Domain",
+          "Source DataClasses",
+          "Source BreachDate",
+          "Source Extra",
+          "Source Sources",
         ]);
-      });
-
-      workbook.xlsx.writeFile(`./DadosPlanilhas/dados_(${url})_${getFormattedDateAndTime()}.xlsx`).then(function () {
-        console.log("Arquivo salvo com sucesso! Verifique a pasta 'DadosPlanilhas'.");
-      });
-      console.log(`Foram obtidos ${array.length} arquivos`);
-      clearInterval(main);
-
-      return;
-    } else {
-      count++;
-    }
-  });
+  
+        array.forEach(function (item) {
+          worksheet.addRow([
+            item.id,
+            item.email,
+            item.username,
+            item.password,
+            item.hashed_password,
+            item.name,
+            item.vin,
+            item.address,
+            item.ip_address,
+            item.phone,
+            item.obtained_from,
+            item.source && item.source.Name ? item.source.Name : "N/A",
+            item.source && item.source.Linked
+              ? item.source.Linked.unknown
+              : "N/A",
+            item.source && item.source.Linked
+              ? item.source.Linked.dehashed
+              : "N/A",
+            item.source && item.source.Linked
+              ? item.source.Linked.leakCheck
+              : "N/A",
+            item.source && item.source.Linked
+              ? item.source.Linked.hbwPwned
+              : "N/A",
+            item.source && item.source.Domain ? item.source.Domain : "N/A",
+            item.source && item.source.DataClasses
+              ? item.source.DataClasses
+              : "N/A",
+            item.source && item.source.BreachDate
+              ? item.source.BreachDate
+              : "N/A",
+            item.source && item.source.extra ? item.source.extra : "N/A",
+            item.source && item.source.Sources ? item.source.Sources : "N/A",
+          ]);
+        });
+  
+        workbook.xlsx.writeFile(`./DadosPlanilhas/dados_(${url})_${getFormattedDateAndTime()}.xlsx`).then(function () {
+          console.log("Arquivo salvo com sucesso! Verifique a pasta 'DadosPlanilhas'.");
+        });
+        console.log(`Foram obtidos ${array.length} arquivos`);
+        clearInterval(main);
+  
+        return;
+      } if(count % 10 == 0){
+        let workbook = new Excel.Workbook();
+        let worksheet = workbook.addWorksheet("Sheet1");
+  
+        worksheet.addRow([
+          "Id",
+          "Email",
+          "Username",
+          "Password",
+          "Hashed Password",
+          "Name",
+          "Vin",
+          "Address",
+          "Ip Address",
+          "Phone",
+          "Obtained From",
+          " Source Name",
+          "Source Linked Unknow",
+          "Source Linked Dehased",
+          "Source Linked LeakCheck",
+          "Source Linked HbwPwned",
+          "Source Domain",
+          "Source DataClasses",
+          "Source BreachDate",
+          "Source Extra",
+          "Source Sources",
+        ]);
+  
+        array.forEach(function (item) {
+          worksheet.addRow([
+            item.id,
+            item.email,
+            item.username,
+            item.password,
+            item.hashed_password,
+            item.name,
+            item.vin,
+            item.address,
+            item.ip_address,
+            item.phone,
+            item.obtained_from,
+            item.source && item.source.Name ? item.source.Name : "N/A",
+            item.source && item.source.Linked
+              ? item.source.Linked.unknown
+              : "N/A",
+            item.source && item.source.Linked
+              ? item.source.Linked.dehashed
+              : "N/A",
+            item.source && item.source.Linked
+              ? item.source.Linked.leakCheck
+              : "N/A",
+            item.source && item.source.Linked
+              ? item.source.Linked.hbwPwned
+              : "N/A",
+            item.source && item.source.Domain ? item.source.Domain : "N/A",
+            item.source && item.source.DataClasses
+              ? item.source.DataClasses
+              : "N/A",
+            item.source && item.source.BreachDate
+              ? item.source.BreachDate
+              : "N/A",
+            item.source && item.source.extra ? item.source.extra : "N/A",
+            item.source && item.source.Sources ? item.source.Sources : "N/A",
+          ]);
+        });
+  
+        workbook.xlsx.writeFile(`./DadosPlanilhas/dados_(${url})_${getFormattedDateAndTime()}.xlsx`).then(function () {
+          console.log("Backup salvo com sucesso!");
+        });
+        count++;
+      } else {
+        count++;
+      }
+    });
+  } else {
+    console.log(`Ops! Número ${count} já foi gerado`);
+  }
 }, 6000);
