@@ -74,7 +74,7 @@ async function fetchData(page) {
     });
     return;
   } catch (error) {
-    console.logr(`Página ${page} não capturada!`);
+    console.log(`Página ${page} não capturada!`);
   }
 }
 
