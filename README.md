@@ -6,7 +6,7 @@ Esse projeto refere-se a uma automação de busca de dados. Esta sendo desenvolv
 
 ```npm init```
 
-```node index```
+```node install```
 
 ## Variáveis Sensíveis
 

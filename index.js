@@ -1,7 +1,7 @@
 const fs = require("fs");
 const axios = require("axios");
 const Excel = require("exceljs");
-const { SearchPages } = require("./functionPages");
+const { SearchPages } = require("./src/services/functionPages");
 require("dotenv").config();
 
 const array = [];
